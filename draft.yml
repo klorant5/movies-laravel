@@ -1,0 +1,5 @@
+controllers:
+  Api\Movies:
+    index:
+      query: where:deleted_at:null order:release_date
+      resource: paginate:movies

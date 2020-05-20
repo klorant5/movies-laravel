@@ -3,7 +3,9 @@
 namespace App;
 
 use App\Libraries\MoviesGrabber;
+use http\Url;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Routing\Route;
 
 class Movie extends Model
 {
@@ -24,4 +26,15 @@ class Movie extends Model
     return $helper->getMovieImageUrl($this);
   }
 
+  public function toArray()
+  {
+    return [
+      'id' => $this->id,
+      'title' => $this->title,
+      'url' => route('api.v1.movies.show', ['movie' => $this->id]),
+      'poster' => $this->getImageUrl(),
+      'popularity' => $this->popularity,
+      'release_date' => date('Y-m-d', strtotime($this->release_date)),
+    ];
+  }
 }

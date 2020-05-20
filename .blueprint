@@ -1,0 +1,11 @@
+created:
+    - app/Http/Controllers/Api/MoviesController.php
+    - app/Http/Resources/MovieCollection.php
+    - tests/Feature/Http/Controllers/Api/MoviesControllerTest.php
+updated:
+    - routes/web.php
+models:
+    Movie: { title: 'string:191', description: text, poster_url: 'string:150', api_movie_id: integer, popularity: 'string:25', release_date: datetime, vote_average: 'string:10', runtime: 'integer unsigned' }
+    MoviesPeople: { movie_id: 'biginteger unsigned', people_id: 'biginteger unsigned', role: 'string:191' }
+    Person: { name: 'string:100', description: text, image_url: 'string:100 nullable', gender: boolean, popularity: 'string:25', api_id: integer, birth_day: 'datetime nullable', death_day: 'datetime nullable' }
+    User: { role_id: 'biginteger unsigned nullable', name: 'string:191', email: 'string:191', avatar: 'string:191 nullable default:users/default.png', email_verified_at: 'datetime nullable', password: 'string:191', api_token: 'string:80 nullable', remember_token: 'string:100 nullable', settings: 'text nullable' }
