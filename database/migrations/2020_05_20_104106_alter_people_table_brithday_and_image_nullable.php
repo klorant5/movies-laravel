@@ -1,11 +1,10 @@
 <?php
 
-use App\Providers\AppServiceProvider;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AlterMoviePeopleTable extends Migration
+class AlterPeopleTableBrithdayAndImageNullable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,8 +13,9 @@ class AlterMoviePeopleTable extends Migration
      */
     public function up()
     {
-      Schema::table('movie_people', function (Blueprint $table) {
-        $table->string('role', AppServiceProvider::VARCHAR_DB_MAXLENGTH)->change();
+      Schema::table('people', function (Blueprint $table) {
+        $table->dateTime('birth_day')->nullable()->change();
+        $table->string('image_url',100)->nullable()->change();
       });
     }
 

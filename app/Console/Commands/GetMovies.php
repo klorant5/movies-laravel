@@ -26,7 +26,7 @@ class GetMovies extends Command
    */
   protected $library;
   protected $error_query_count = 0;
-  private $dev_mode = TRUE;
+  private $dev_mode = FALSE;
 
   /**
    * Create a new command instance.
@@ -55,8 +55,9 @@ class GetMovies extends Command
 
 
     $i = (int)$page;
-    for (; $i <= self::MAX_PAGE_PER_REQUEST; $i++) {
-      $api_response = $this->library->getDiscoverData($page, $year);
+    $max_page_number = self::MAX_PAGE_PER_REQUEST + $i;
+    for (; $i <= $max_page_number; $i++) {
+      $api_response = $this->library->getDiscoverData($i, $year);
       if (is_null($api_response)) {
         $this->warn('API response error.');
         return false;

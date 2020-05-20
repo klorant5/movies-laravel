@@ -5,11 +5,15 @@ namespace App\Libraries;
 use App\Movie;
 use App\MoviesPeople;
 use App\Person;
+use App\Providers\AppServiceProvider;
 use GuzzleHttp\Client;
 
 class MoviesGrabber
 {
   const MAX_CAST_MEMBER_PER_MOVIE = 10;
+  const MAX_CREW_MEMBER_PER_MOVIE = 5;
+  const CAST_DATA_TYPE_CAST = 'cast';
+  const CAST_DATA_TYPE_CREW = 'crew';
 
   /**
    * @var Client
@@ -28,12 +32,12 @@ class MoviesGrabber
    * api_id => our saved_id
    * @var array
    */
-  protected $savedCastMember = [];
+  protected $savedCastMembers = [];
 
   public function __construct()
   {
     $this->savedMovieIds = Movie::all()->pluck('api_movie_id')->toArray();
-    $this->savedCastMember = Person::all()->pluck('id', 'api_id')->toArray();
+    $this->savedCastMembers = Person::all()->pluck('id', 'api_id')->toArray();
     $this->client = new Client();
   }
 
@@ -112,36 +116,9 @@ class MoviesGrabber
       $this->savedMovieIds[] = (string)$data['id'];
 
       $cast_data = $this->getCastData($movie);
-      for ($j = 0; $j < self::MAX_CAST_MEMBER_PER_MOVIE; $j++) {
-        $cast_member = $cast_data['cast'][$j];
-//      }
-//      foreach ($cast_data['cast'] as $cast_member) {
-        if (isset($this->savedCastMember[$cast_member['id']])) {
-          //cast member exists
-          $person_id = $this->savedCastMember[$cast_member['id']];
-        } else {
-          //cast member doesn't exist in our database
-          //api call
-          $person_data = $this->getPersonAPIData($cast_member['id']);
-          $person = Person::create([
-            'api_id' => $person_data['id'],
-            'name' => $person_data['name'],
-            'description' => $person_data['biography'],
-            'image_url' => $person_data['profile_path'],
-            'gender' => $person_data['gender'],
-            'popularity' => $person_data['popularity'],
-            'birth_day' => $person_data['birthday'] ? date('Y-m-d H:i:s', strtotime($person_data['birthday'])) : null,
-            'death_day' => $person_data['deathday'] ? date('Y-m-d H:i:s', strtotime($person_data['deathday'])) : null,
-          ]);
-          $person_id = $person->id;
-          $this->savedCastMember[$cast_member['id']] = $person_id;
-        }
-
-        $connection = MoviesPeople::create([
-          'movie_id' => $movie->id,
-          'people_id' => $person_id,
-          'role' => $cast_member['character']
-        ]);
+      if ($cast_data) {
+        $this->parseCastData($cast_data, $movie);
+        $this->parseCastData($cast_data, $movie, self::CAST_DATA_TYPE_CREW);
       }
     } catch (\Exception $exception) {
       $this->lastOperation = "ERROR:" . $exception->getMessage();
@@ -163,6 +140,53 @@ class MoviesGrabber
       }
     }
     return $ret;
+  }
+
+  /**
+   * @param array|null $cast_data
+   * @param $movie
+   * @param string $cast_type
+   */
+  protected function parseCastData(?array $cast_data, $movie, $cast_type = self::CAST_DATA_TYPE_CAST): void
+  {
+    $max = ($cast_type === self::CAST_DATA_TYPE_CAST) ? self::MAX_CAST_MEMBER_PER_MOVIE : self::MAX_CREW_MEMBER_PER_MOVIE;
+    for ($j = 0; $j < $max; $j++) {
+      if (!isset($cast_data[$cast_type][$j])) {
+        break;
+      }
+      $cast_member = $cast_data[$cast_type][$j];
+      if (isset($this->savedCastMembers[$cast_member['id']])) {
+        //cast member exists
+        $person_id = $this->savedCastMembers[$cast_member['id']];
+      } else {
+        //cast member doesn't exist in our database
+        //api call
+        $person_data = $this->getPersonAPIData($cast_member['id']);
+        $person = Person::create([
+          'api_id' => $person_data['id'],
+          'name' => $person_data['name'],
+          'description' => $person_data['biography'],
+          'image_url' => $person_data['profile_path'],
+          'gender' => $person_data['gender'],
+          'popularity' => $person_data['popularity'],
+          'birth_day' => $person_data['birthday'] ? date('Y-m-d H:i:s', strtotime($person_data['birthday'])) : null,
+          'death_day' => $person_data['deathday'] ? date('Y-m-d H:i:s', strtotime($person_data['deathday'])) : null,
+        ]);
+        $person_id = $person->id;
+        $this->savedCastMembers[$cast_member['id']] = $person_id;
+      }
+
+      $role_name = 'character';
+      if ($cast_type !== self::CAST_DATA_TYPE_CAST) {
+        $role_name = 'job';
+      }
+      $role = substr($cast_member[$role_name], 0, AppServiceProvider::VARCHAR_DB_MAXLENGTH - 1);
+      MoviesPeople::create([
+        'movie_id' => $movie->id,
+        'people_id' => $person_id,
+        'role' => $role
+      ]);
+    }
   }
 
 }
