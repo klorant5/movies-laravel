@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Libraries\MoviesGrabber;
 use Illuminate\Database\Eloquent\Model;
 
 class Movie extends Model
@@ -15,6 +16,12 @@ class Movie extends Model
   public function persons()
   {
     return $this->belongsToMany(Person::class)->withTimestamps();
+  }
+
+  public function getImageUrl(): string
+  {
+    $helper = MoviesGrabber::getInstance();
+    return $helper->getMovieImageUrl($this);
   }
 
 }

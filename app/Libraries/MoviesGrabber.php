@@ -14,6 +14,10 @@ class MoviesGrabber
   const MAX_CREW_MEMBER_PER_MOVIE = 5;
   const CAST_DATA_TYPE_CAST = 'cast';
   const CAST_DATA_TYPE_CREW = 'crew';
+  /**
+   * @var MoviesGrabber
+   */
+  private static $instance;
 
   /**
    * @var Client
@@ -69,12 +73,28 @@ class MoviesGrabber
   {
     return [
       'apikeyv3' => '25c4fe756826598f848dd6e1f29f20e5',
+      'imageurl' => 'http://image.tmdb.org/t/p/original/#imageurl#',
       'exampleapireq' => 'https://api.themoviedb.org/3/movie/550?api_key=25c4fe756826598f848dd6e1f29f20e5',
       'apiReadAccToken' => 'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyNWM0ZmU3NTY4MjY1OThmODQ4ZGQ2ZTFmMjlmMjBlNSIsInN1YiI6IjVlODc2YWYzZGExMGYwMDAxNGEyOWU1MyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.O7g43BEH8D_Vaz-YbNxCu4Z97e1RbQhGigu-49vDcxc',
       'discover' => 'https://api.themoviedb.org/3/discover/movie?api_key=25c4fe756826598f848dd6e1f29f20e5',
       'cast' => 'https://api.themoviedb.org/3/movie/#movieid#/credits?api_key=25c4fe756826598f848dd6e1f29f20e5',
       'person' => 'https://api.themoviedb.org/3/person/#personid#?api_key=25c4fe756826598f848dd6e1f29f20e5&language=en-US'
     ];
+  }
+
+  public function getMovieImageUrl(Movie $movie): string
+  {
+    $url = $this->getAPIAccess()['imageurl'];
+    return str_replace('#imageurl#', $movie->poster_url, $url);
+  }
+
+  public static function getInstance()
+  {
+    if (empty(self::$instance)) {
+      self::$instance = new static();
+    }
+
+    return self::$instance;
   }
 
   protected function getPage(string $url): ?array
