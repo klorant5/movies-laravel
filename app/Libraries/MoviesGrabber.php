@@ -216,7 +216,8 @@ class MoviesGrabber
       MoviesPeople::create([
         'movie_id' => $movie->id,
         'people_id' => $person_id,
-        'role' => $role
+        'role' => $role,
+        'cast_type' => $cast_type
       ]);
     }
   }

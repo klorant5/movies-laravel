@@ -18,7 +18,7 @@ class Movie extends Model
   public function persons()
   {
     return $this->belongsToMany(Person::class, 'movie_people', 'movie_id', 'people_id')
-      ->withPivot('role');
+      ->withPivot(['role', 'cast_type']);
   }
 
   public function getImageUrl(): string
@@ -39,10 +39,10 @@ class Movie extends Model
     ];
   }
 
-  public function getCastData()
+  public function getCastData($type = MoviesGrabber::CAST_DATA_TYPE_CAST)
   {
-    return $this->persons->filter(function ($member) {
-      if ($member->id === 4) {    //todo pivot->role_type=='cast'
+    return $this->persons->filter(function ($member) use ($type) {
+      if ($member->pivot->cast_type === $type) {
         return true;
       }
       return false;
@@ -53,10 +53,11 @@ class Movie extends Model
   {
     $member->role = $member->pivot->role;
     $member->image_url = $member->getImageUrl();
+    $member->person_url = '/url';
     $member->birth_day = $member->birth_day ? date('Y-m-d', strtotime($member->birth_day)) : null;
     $member->death_day = $member->death_day ? date('Y-m-d', strtotime($member->death_day)) : null;
     unset($member->api_id);
-    unset($member->pivot);
+//    unset($member->pivot);
     unset($member->created_at);
     unset($member->updated_at);
     unset($member->deleted_at);

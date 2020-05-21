@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Person extends Model
 {
   protected $guarded = [];
+  protected $hidden = ['pivot'];
 
   public function movies()
   {

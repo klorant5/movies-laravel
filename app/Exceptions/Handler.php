@@ -51,8 +51,6 @@ class Handler extends ExceptionHandler
    */
   public function render($request, Throwable $exception)
   {
-    var_dump($exception instanceof ModelNotFoundException);
-    var_dump($request->wantsJson());
     if ($exception instanceof ModelNotFoundException && $request->wantsJson()) {
       return response()->json([
         'error' => 'Resource not found'
