@@ -24,4 +24,5 @@ Route::middleware(['auth:api'])
   ->name('api.v1.')
   ->group(function () {
     Route::resource('movies', 'Api\MoviesController')->only(['index', 'show']);
+    Route::resource('people', 'Api\PeopleController')->only(['index', 'show']);
   });

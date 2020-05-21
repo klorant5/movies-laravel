@@ -3,9 +3,7 @@
 namespace App;
 
 use App\Libraries\MoviesGrabber;
-use http\Url;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Routing\Route;
 
 class Movie extends Model
 {
@@ -14,6 +12,7 @@ class Movie extends Model
     'title', 'description', 'poster_url', 'api_movie_id', 'popularity', 'release_date', 'vote_average', 'runtime'
   ];
 
+  protected $hidden = ['pivot', 'api_movie_id', 'runtime', 'created_at', 'updated_at', 'deleted_at'];
 
   public function persons()
   {
@@ -25,18 +24,6 @@ class Movie extends Model
   {
     $helper = MoviesGrabber::getInstance();
     return $helper->getMovieImageUrl($this);
-  }
-
-  public function toArray()
-  {
-    return [
-      'id' => $this->id,
-      'title' => $this->title,
-      'url' => route('api.v1.movies.show', ['movie' => $this->id]),
-      'poster_url' => $this->getImageUrl(),
-      'popularity' => $this->popularity,
-      'release_date' => date('Y-m-d', strtotime($this->release_date)),
-    ];
   }
 
   public function getCastData($type = MoviesGrabber::CAST_DATA_TYPE_CAST)
@@ -53,14 +40,10 @@ class Movie extends Model
   {
     $member->role = $member->pivot->role;
     $member->image_url = $member->getImageUrl();
-    $member->person_url = '/url';
+    $member->person_url = route('api.v1.people.show', ['person' => $member->id]);
     $member->birth_day = $member->birth_day ? date('Y-m-d', strtotime($member->birth_day)) : null;
     $member->death_day = $member->death_day ? date('Y-m-d', strtotime($member->death_day)) : null;
-    unset($member->api_id);
-//    unset($member->pivot);
-    unset($member->created_at);
-    unset($member->updated_at);
-    unset($member->deleted_at);
+
     return $member;
   }
 }
