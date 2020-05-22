@@ -16,9 +16,25 @@ class Person extends Model
       ->withPivot(['role']);
   }
 
-  public function getImageUrl(): string
+  public function getImageUrl(?string $url = null): string
   {
     $helper = MoviesGrabber::getInstance();
-    return $helper->getPersonImageUrl($this);
+    $param = !empty($url) ? $url : $this;
+    return $helper->getMovieImageUrl($param);
+  }
+
+  public function getImageUrlAttribute($value)
+  {
+    return $this->getImageUrl($value);
+  }
+
+  public function getBirthDayAttribute($value)
+  {
+    return !empty($value) ? date('Y-m-d', strtotime($value)) : null;
+  }
+
+  public function getDeathDayAttribute($value)
+  {
+    return !empty($value) ? date('Y-m-d', strtotime($value)) : null;
   }
 }

@@ -82,22 +82,26 @@ class MoviesGrabber
     ];
   }
 
-  public function getMovieImageUrl(Movie $movie): string
+  public function getMovieImageUrl($movie): string
   {
-    if (empty($movie->poster_url)) {
-      return '';
-    }
     $url = $this->getAPIAccess()['imageurl'];
-    return str_replace('#imageurl#', $movie->poster_url, $url);
+    if((is_string($movie))) {
+      return str_replace('#imageurl#', $movie, $url);
+    }elseif (isset($movie->poster_url)) {
+      return str_replace('#imageurl#', $movie->poster_url, $url);
+    }
+    return 'http://placehold.it/200';
   }
 
-  public function getPersonImageUrl(Person $person): string
+  public function getPersonImageUrl($person): string
   {
-    if (empty($person->image_url)) {
-      return '';
-    }
     $url = $this->getAPIAccess()['imageurl'];
-    return str_replace('#imageurl#', $person->image_url, $url);
+    if((is_string($person))) {
+      return str_replace('#imageurl#', $person, $url);
+    }elseif (isset($movie->poster_url)) {
+      return str_replace('#imageurl#', $person->image_url, $url);
+    }
+    return 'http://placehold.it/200';
   }
 
   public static function getInstance()

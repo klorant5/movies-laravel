@@ -20,10 +20,11 @@ class Movie extends Model
       ->withPivot(['role', 'cast_type']);
   }
 
-  public function getImageUrl(): string
+  public function getImageUrl(?string $url = null): string
   {
     $helper = MoviesGrabber::getInstance();
-    return $helper->getMovieImageUrl($this);
+    $param = !empty($url) ? $url : $this;
+    return $helper->getMovieImageUrl($param);
   }
 
   public function getCastData($type = MoviesGrabber::CAST_DATA_TYPE_CAST)
@@ -39,11 +40,18 @@ class Movie extends Model
   public function pretifyPersonResponse($member)
   {
     $member->role = $member->pivot->role;
-    $member->image_url = $member->getImageUrl();
     $member->person_url = route('api.v1.people.show', ['person' => $member->id]);
-    $member->birth_day = $member->birth_day ? date('Y-m-d', strtotime($member->birth_day)) : null;
-    $member->death_day = $member->death_day ? date('Y-m-d', strtotime($member->death_day)) : null;
 
     return $member;
+  }
+
+  public function getPosterUrlAttribute($value)
+  {
+    return $this->getImageUrl($value);
+  }
+
+  public function getReleaseDateAttribute($value)
+  {
+    return !empty($value) ? date('Y-m-d', strtotime($value)) : null;
   }
 }
