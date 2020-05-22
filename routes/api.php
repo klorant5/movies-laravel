@@ -25,4 +25,5 @@ Route::middleware(['auth:api'])
   ->group(function () {
     Route::resource('movies', 'Api\MoviesController')->only(['index', 'show']);
     Route::resource('people', 'Api\PeopleController')->only(['index', 'show']);
+    Route::get('search', 'Api\MoviesController@search')->name('search');
   });

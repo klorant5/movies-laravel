@@ -27,4 +27,10 @@ class MoviesController extends Controller
   {
     return new MovieResource($movie);
   }
+
+  public function search(Request $request)
+  {
+    $search_string = $request->get('s');
+    return [];
+  }
 }
