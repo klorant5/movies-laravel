@@ -18,7 +18,7 @@ class MoviesController extends Controller
   {
     $movies = Movie::where('deleted_at', NULL)
       ->orderBy('release_date')
-      ->paginate(10);
+      ->paginate(12);
 
     return new MovieCollection($movies);
   }

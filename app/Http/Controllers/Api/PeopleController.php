@@ -17,7 +17,7 @@ class PeopleController extends Controller
   public function index(Request $request)
   {
     $people = Person::where('deleted_at', NULL)
-      ->paginate(10);
+      ->paginate(12);
 
     return new PeopleCollection($people);
   }

@@ -90,7 +90,7 @@ class MoviesGrabber
     }elseif (isset($movie->poster_url)) {
       return str_replace('#imageurl#', $movie->poster_url, $url);
     }
-    return 'http://placehold.it/200';
+    return 'http://placehold.it/185x278';
   }
 
   public function getPersonImageUrl($person): string

@@ -18,7 +18,7 @@
         </nav>
         <div class="row">
             <div class="col-sm-3" v-for="movie in movies">
-                <a href="#">
+                <router-link :to="{name: 'movie_page', params: {id: movie.id}}">
                     <div class="card">
                         <img v-bind:src="movie.poster_url" class="card-img-top" v-bind:alt="movie.title">
                         <div class="card-body">
@@ -26,7 +26,7 @@
                             <p class="card-text">{{ movie.description }}</p>
                         </div>
                     </div>
-                </a>
+                </router-link>
             </div>
 
         </div>
@@ -74,3 +74,17 @@
         }
     }
 </script>
+
+<style>
+    .movie-link:hover {
+        text-decoration: none;
+    }
+    .card {
+        margin-bottom: 30px;
+    }
+    .card-body {
+        height: 230px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+</style>

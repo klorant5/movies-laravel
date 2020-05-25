@@ -17,7 +17,9 @@
 <body>
 <div id="app">
     <div class="container">
-        <movies></movies>
+        <router-link to="/">Home</router-link>
+
+        <router-view></router-view>
     </div>
 
 </div>
