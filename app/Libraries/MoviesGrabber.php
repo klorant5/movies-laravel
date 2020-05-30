@@ -85,9 +85,9 @@ class MoviesGrabber
   public function getMovieImageUrl($movie): string
   {
     $url = $this->getAPIAccess()['imageurl'];
-    if((is_string($movie))) {
+    if ((is_string($movie))) {
       return str_replace('#imageurl#', $movie, $url);
-    }elseif (isset($movie->poster_url)) {
+    } elseif (isset($movie->poster_url)) {
       return str_replace('#imageurl#', $movie->poster_url, $url);
     }
     return 'http://placehold.it/185x278';
@@ -96,9 +96,9 @@ class MoviesGrabber
   public function getPersonImageUrl($person): string
   {
     $url = $this->getAPIAccess()['imageurl'];
-    if((is_string($person))) {
+    if ((is_string($person))) {
       return str_replace('#imageurl#', $person, $url);
-    }elseif (isset($movie->poster_url)) {
+    } elseif (isset($movie->poster_url)) {
       return str_replace('#imageurl#', $person->image_url, $url);
     }
     return 'http://placehold.it/200';

@@ -9,6 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 import MoviesListComponent from './components/MoviesListComponent.vue';
 import MovieComponent from './components/MovieComponent.vue';
+import ActorComponent from './components/ActorComponent.vue';
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
@@ -30,7 +31,8 @@ Vue.use(VueRouter)
 
 const routes = [
     { path: '/', component: MoviesListComponent },
-    { path: '/movie/:id', component: MovieComponent, name: 'movie_page' }
+    { path: '/movie/:id', component: MovieComponent, name: 'movie_page' },
+    { path: '/actor/:id', component: ActorComponent, name: 'actor_page' }
 ];
 
 const router = new VueRouter({

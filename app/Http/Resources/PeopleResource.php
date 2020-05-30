@@ -26,6 +26,7 @@ class PeopleResource extends JsonResource
       'movies' => $this->movies->map(function ($movie) {
         $movie->role = $movie->pivot->role;
         $movie->url = route('api.v1.movies.show', ['movie' => $movie->id]);
+        $movie->title = $movie->getTitleAndReleaseYear();
         return $movie;
       })
     ];

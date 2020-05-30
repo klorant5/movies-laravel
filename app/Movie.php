@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Libraries\MoviesGrabber;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Movie extends Model
@@ -53,5 +54,10 @@ class Movie extends Model
   public function getReleaseDateAttribute($value)
   {
     return !empty($value) ? date('Y-m-d', strtotime($value)) : null;
+  }
+
+    public function getTitleAndReleaseYear()
+    {
+        return $this->title . ' (' . Carbon::create($this->release_date)->format('Y') . ')';
   }
 }
