@@ -1,10 +1,10 @@
 <template>
     <div>
-        <h3>{{ title }}</h3>
+        <h3 class="mb20">{{ title }}</h3>
         <div>
             <div class="row">
                 <div class="col-sm-3" v-for="actor in people">
-                    <router-link :to="{name: 'actor_page', params: {id: actor.id}}">
+                    <router-link :to="{name: 'actor_page', params: {id: actor.id}}" class="actor-link">
                         <div>
                             <img :src="actor.image_url" alt="">
                         </div>
@@ -28,6 +28,7 @@
             },
             title: {
                 type: String,
+                required: false,
                 default: 'Cast'
             },
 
@@ -40,7 +41,11 @@
     }
 </script>
 <style>
+    .actor-link img {
+        width: 100%;
+    }
     .row a {
+        display: block;
         text-decoration: none;
         margin-bottom: 20px;
     }

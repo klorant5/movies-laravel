@@ -1,13 +1,13 @@
 <template>
     <div>
         <h3>{{ actor.name }}</h3>
-        <div>
+        <div class="img-container">
             <img :src="actor.image_url" :alt="actor.name">
         </div>
         <p>{{ actor.description }}</p>
 
         <div>
-            <h3>Movie roles</h3>
+            <h3 class="movie-roles-header">Movie roles</h3>
             <div class="row">
                 <div class="col-sm-3" v-for="movie in actor.movies">
                     <router-link :to="{name: 'movie_page', params: {id: movie.id}}">
@@ -43,7 +43,6 @@
                 },
             }).then(res => res.json())
                 .then(res => {
-                    console.log(res.data);
                     this.actor = res.data;
                 })
                 .catch(err => console.log(err));
@@ -51,6 +50,12 @@
     }
 </script>
 <style>
+    .movie-roles-header {
+        margin-bottom: 30px;
+    }
+    .img-container {
+        margin-bottom: 20px;
+    }
     .name-and-roles {
         margin-top: 10px;
     }

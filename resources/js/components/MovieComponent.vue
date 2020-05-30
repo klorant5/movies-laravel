@@ -1,10 +1,10 @@
 <template>
     <div>
-        <h2>{{movie.title}}</h2>
-        <div>
+        <h2 class="mb20">{{movie.title}}</h2>
+        <div class="mb20">
             <img :src="movie.poster_url" alt="">
         </div>
-        <div>
+        <div class="mb20">
             Votes: {{ movie.vote_average *10 }}%
         </div>
         <div>
@@ -14,7 +14,7 @@
         </div>
 
         <PeopleListComponent :people="movie.cast"></PeopleListComponent>
-        <PeopleListComponent :people="movie.crew" :title="Crew"></PeopleListComponent>
+        <PeopleListComponent :people="movie.crew" title="Crew"></PeopleListComponent>
 
     </div>
 </template>
@@ -48,3 +48,8 @@
 
     }
 </script>
+<style>
+    .mb20 {
+        margin-bottom: 20px;
+    }
+</style>
