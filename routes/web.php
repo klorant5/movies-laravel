@@ -16,6 +16,13 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
   return view('welcome');
 });
+Route::get('/test', function () {
+
+    $helper = new \App\Libraries\SearchHelper('movies from 2019 and 2018 and 2017');
+//    $helper = new \App\Libraries\SearchHelper('movies from 2019');
+    $helper->getSearchQuery();
+    return 'test';
+});
 
 
 Route::group(['prefix' => 'admin'], function () {

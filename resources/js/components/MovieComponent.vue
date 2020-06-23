@@ -5,7 +5,7 @@
             <img :src="movie.poster_url" alt="">
         </div>
         <div class="mb20">
-            Votes: {{ movie.vote_average *10 }}%
+            Votes: {{ movie.vote_average * 10 }}%
         </div>
         <div>
             <p>
